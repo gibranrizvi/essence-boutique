@@ -1,11 +1,12 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Button } from '@material-ui/core';
-import {} from '@material-ui/icons';
 import { Link } from 'react-router-dom';
 
 import logo from '../../assets/img/logo.png';
 import { FirebaseContext } from '../../firebase';
+
+import AuthModal from '../auth-modal/AuthModal';
 
 const useStyles = makeStyles(theme => ({
   grow: {
@@ -32,7 +33,13 @@ const useStyles = makeStyles(theme => ({
       display: 'none'
     }
   },
-  offset: theme.mixins.toolbar
+  offset: theme.mixins.toolbar,
+  toolbar: { backgroundColor: 'white', color: 'black' },
+  imageDiv: { marginRight: '10px', height: '32px' },
+  image: { height: '32px' },
+  authButton: {
+    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
+  }
 }));
 
 const Header = () => {
@@ -43,20 +50,25 @@ const Header = () => {
   return (
     <div className={classes.grow}>
       <AppBar position="fixed">
-        <Toolbar style={{ backgroundColor: 'white', color: 'black' }}>
-          <div style={{ marginRight: '10px' }}>
-            <img src={logo} alt="Essence" style={{ height: '32px' }} />
-          </div>
-
+        <Toolbar className={classes.toolbar}>
+          <Button component={Link} to="/">
+            <div className={classes.imageDiv}>
+              <img src={logo} alt="Essence" className={classes.image} />
+            </div>
+          </Button>
           <div className={classes.grow} />
+
           {currentUser ? (
-            <Button color="black" component={Link} to="/">
+            <Button
+              className={classes.authButton}
+              color="primary"
+              component={Link}
+              to="/"
+            >
               Sign Out
             </Button>
           ) : (
-            <Button color="black" component={Link} to="/sign-in">
-              Sign In
-            </Button>
+            <AuthModal />
           )}
         </Toolbar>
       </AppBar>
