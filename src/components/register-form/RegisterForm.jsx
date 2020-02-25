@@ -32,6 +32,7 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(3, 0, 2)
   },
   submitButton: {
+    color: 'white',
     marginBottom: theme.spacing(1),
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
   }
@@ -40,7 +41,7 @@ const useStyles = makeStyles(theme => ({
 const INITIAL_VALUES = {
   firstName: '',
   lastName: '',
-  gender: '',
+  telephone: '',
   email: '',
   password: '',
   confirmPassword: ''
@@ -65,51 +66,35 @@ export default function RegisterForm({ toggleDrawer, setShowSignInForm }) {
   const handleSubmit = async event => {
     event.preventDefault();
 
-    console.log(errors);
-
     // Validation
     if (!firstName) {
-      return setErrors({ ...errors, firstName: 'First name is required' });
+      return setErrors({ firstName: 'First name is required' });
     } else if (!lastName) {
       return setErrors({
-        ...errors,
-        firstName: '',
         lastName: 'Last name is required'
       });
     } else if (!telephone) {
       return setErrors({
-        ...errors,
-        lastName: '',
         telephone: 'Please enter a telephone number'
       });
     } else if (!email) {
       return setErrors({
-        ...errors,
-        telephone: '',
         email: 'Email is required'
       });
     } else if (!password) {
       return setErrors({
-        ...errors,
-        email: '',
         password: 'Password is required'
       });
     } else if (password.length < 6) {
       return setErrors({
-        ...errors,
-        email: '',
         password: 'Password must be at least 6 characters'
       });
     } else if (!confirmPassword) {
       return setErrors({
-        ...errors,
-        password: '',
         confirmPassword: 'Please confirm password'
       });
     } else if (password !== confirmPassword) {
       return setErrors({
-        ...errors,
-        password: '',
         confirmPassword: 'Passwords do not match'
       });
     } else if (
@@ -132,8 +117,10 @@ export default function RegisterForm({ toggleDrawer, setShowSignInForm }) {
       formattedLastName.charAt(0).toUpperCase() +
       formattedLastName.substring(1);
 
+    const formattedEmail = email;
+
     try {
-      const user = await createNewUser(email, password);
+      const user = await createNewUser(formattedEmail, password);
 
       const { uid, email } = user;
 
@@ -146,9 +133,9 @@ export default function RegisterForm({ toggleDrawer, setShowSignInForm }) {
 
       await createUserProfileDocument(userData);
 
-      setSubmitting(false);
-      setValues(INITIAL_VALUES);
-      return toggleDrawer();
+      await setSubmitting(false);
+      await setValues(INITIAL_VALUES);
+      return toggleDrawer;
     } catch (error) {
       console.log(error);
       setSubmitting(false);
@@ -207,7 +194,7 @@ export default function RegisterForm({ toggleDrawer, setShowSignInForm }) {
             margin="dense"
             required
             fullWidth
-            type="telephone"
+            type="tel"
             label="Telephone"
             value={telephone}
             onChange={({ target }) =>
@@ -259,7 +246,6 @@ export default function RegisterForm({ toggleDrawer, setShowSignInForm }) {
               type="submit"
               fullWidth
               variant="contained"
-              color="primary"
               className={classes.submitButton}
             >
               {submitting && (
@@ -281,7 +267,11 @@ export default function RegisterForm({ toggleDrawer, setShowSignInForm }) {
           </div>
           <Grid container justify="center">
             <Grid item>
-              <Link onClick={() => setShowSignInForm(true)} variant="body2">
+              <Link
+                onClick={() => setShowSignInForm(true)}
+                variant="body2"
+                style={{ cursor: 'pointer' }}
+              >
                 Already have an account? Sign in
               </Link>
             </Grid>

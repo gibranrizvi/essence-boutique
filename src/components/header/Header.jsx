@@ -4,7 +4,7 @@ import { AppBar, Toolbar, Button } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 
 import logo from '../../assets/img/logo.png';
-import { FirebaseContext } from '../../firebase';
+import { FirebaseContext, auth } from '../../firebase';
 
 import AuthModal from '../auth-modal/AuthModal';
 
@@ -38,6 +38,7 @@ const useStyles = makeStyles(theme => ({
   imageDiv: { marginRight: '10px', height: '32px' },
   image: { height: '32px' },
   authButton: {
+    color: 'white',
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
   }
 }));
@@ -61,9 +62,8 @@ const Header = () => {
           {currentUser ? (
             <Button
               className={classes.authButton}
-              color="primary"
-              component={Link}
-              to="/"
+              variant="contained"
+              onClick={() => auth.signOut()}
             >
               Sign Out
             </Button>

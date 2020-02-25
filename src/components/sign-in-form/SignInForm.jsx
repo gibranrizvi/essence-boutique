@@ -31,6 +31,7 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(3, 0, 2)
   },
   submitButton: {
+    color: 'white',
     marginBottom: theme.spacing(1),
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
   }
@@ -77,7 +78,6 @@ export default function SignIn({ toggleDrawer, setShowSignInForm }) {
               type="submit"
               fullWidth
               variant="contained"
-              color="primary"
               className={classes.submitButton}
             >
               {submitting && (
@@ -107,7 +107,7 @@ export default function SignIn({ toggleDrawer, setShowSignInForm }) {
               <Link
                 onClick={() => setShowSignInForm(false)}
                 variant="body2"
-                style={{}}
+                style={{ cursor: 'pointer' }}
               >
                 Don't have an account? Sign up now
               </Link>
