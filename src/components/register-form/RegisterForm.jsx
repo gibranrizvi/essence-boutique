@@ -1,16 +1,18 @@
 import React from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
+import {
+  Avatar,
+  Button,
+  CssBaseline,
+  TextField,
+  Link,
+  Grid,
+  Typography,
+  Container,
+  CircularProgress
+} from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
+import { createNewUser, createUserProfileDocument } from '../../firebase';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -35,8 +37,126 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function Register({ toggleDrawer, setShowSignInForm }) {
+const INITIAL_VALUES = {
+  firstName: '',
+  lastName: '',
+  gender: '',
+  email: '',
+  password: '',
+  confirmPassword: ''
+};
+
+export default function RegisterForm({ toggleDrawer, setShowSignInForm }) {
   const classes = useStyles();
+
+  const [values, setValues] = React.useState(INITIAL_VALUES);
+  const [errors, setErrors] = React.useState({});
+  const [submitting, setSubmitting] = React.useState(false);
+
+  const {
+    firstName,
+    lastName,
+    telephone,
+    email,
+    password,
+    confirmPassword
+  } = values;
+
+  const handleSubmit = async event => {
+    event.preventDefault();
+
+    console.log(errors);
+
+    // Validation
+    if (!firstName) {
+      return setErrors({ ...errors, firstName: 'First name is required' });
+    } else if (!lastName) {
+      return setErrors({
+        ...errors,
+        firstName: '',
+        lastName: 'Last name is required'
+      });
+    } else if (!telephone) {
+      return setErrors({
+        ...errors,
+        lastName: '',
+        telephone: 'Please enter a telephone number'
+      });
+    } else if (!email) {
+      return setErrors({
+        ...errors,
+        telephone: '',
+        email: 'Email is required'
+      });
+    } else if (!password) {
+      return setErrors({
+        ...errors,
+        email: '',
+        password: 'Password is required'
+      });
+    } else if (password.length < 6) {
+      return setErrors({
+        ...errors,
+        email: '',
+        password: 'Password must be at least 6 characters'
+      });
+    } else if (!confirmPassword) {
+      return setErrors({
+        ...errors,
+        password: '',
+        confirmPassword: 'Please confirm password'
+      });
+    } else if (password !== confirmPassword) {
+      return setErrors({
+        ...errors,
+        password: '',
+        confirmPassword: 'Passwords do not match'
+      });
+    } else if (
+      email &&
+      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email)
+    ) {
+      return setErrors({ email: 'Email is invalid' });
+    }
+
+    setSubmitting(true);
+    setErrors({});
+
+    const formattedFirstName = firstName.trim(),
+      formattedLastName = lastName.trim();
+
+    const displayName =
+      formattedFirstName.charAt(0).toUpperCase() +
+      formattedFirstName.substring(1) +
+      ' ' +
+      formattedLastName.charAt(0).toUpperCase() +
+      formattedLastName.substring(1);
+
+    try {
+      const user = await createNewUser(email, password);
+
+      const { uid, email } = user;
+
+      const userData = {
+        uid,
+        displayName,
+        telephone,
+        email
+      };
+
+      await createUserProfileDocument(userData);
+
+      setSubmitting(false);
+      setValues(INITIAL_VALUES);
+      return toggleDrawer();
+    } catch (error) {
+      console.log(error);
+      setSubmitting(false);
+      return setErrors({
+        email: 'Email is already in use'
+      });
+    }
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -48,55 +168,92 @@ export default function Register({ toggleDrawer, setShowSignInForm }) {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <form className={classes.form} noValidate>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+        <form onSubmit={handleSubmit} className={classes.form} noValidate>
+          <Grid container spacing={1}>
+            <Grid item xs={6}>
               <TextField
-                autoComplete="fname"
-                name="firstName"
                 variant="outlined"
+                margin="dense"
                 required
                 fullWidth
-                id="firstName"
+                type="text"
                 label="First Name"
                 autoFocus
+                value={firstName}
+                onChange={({ target }) =>
+                  setValues({ ...values, firstName: target.value })
+                }
+                error={!!errors.firstName}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={6}>
               <TextField
                 variant="outlined"
+                margin="dense"
                 required
                 fullWidth
-                id="lastName"
+                type="text"
                 label="Last Name"
-                name="lastName"
-                autoComplete="lname"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
+                value={lastName}
+                onChange={({ target }) =>
+                  setValues({ ...values, lastName: target.value })
+                }
+                error={!!errors.lastName}
               />
             </Grid>
           </Grid>
+          <TextField
+            variant="outlined"
+            margin="dense"
+            required
+            fullWidth
+            type="telephone"
+            label="Telephone"
+            value={telephone}
+            onChange={({ target }) =>
+              setValues({ ...values, telephone: target.value })
+            }
+            error={!!errors.telephone}
+          />
+          <TextField
+            variant="outlined"
+            margin="dense"
+            required
+            fullWidth
+            type="email"
+            label="Email"
+            value={email}
+            onChange={({ target }) =>
+              setValues({ ...values, email: target.value })
+            }
+            error={!!errors.email}
+          />
+          <TextField
+            variant="outlined"
+            margin="dense"
+            required
+            fullWidth
+            label="Password"
+            type="password"
+            value={password}
+            onChange={({ target }) =>
+              setValues({ ...values, password: target.value })
+            }
+            error={!!errors.password}
+          />
+          <TextField
+            variant="outlined"
+            margin="dense"
+            required
+            fullWidth
+            label="Confirm Password"
+            type="password"
+            value={confirmPassword}
+            onChange={({ target }) =>
+              setValues({ ...values, confirmPassword: target.value })
+            }
+            error={!!errors.confirmPassword}
+          />
           <div className={classes.submit}>
             <Button
               type="submit"
@@ -105,6 +262,17 @@ export default function Register({ toggleDrawer, setShowSignInForm }) {
               color="primary"
               className={classes.submitButton}
             >
+              {submitting && (
+                <CircularProgress
+                  size={20}
+                  style={{
+                    position: 'absolute',
+                    left: 20,
+                    alignSelf: 'center',
+                    color: 'white'
+                  }}
+                />
+              )}
               Create Account
             </Button>
             <Button fullWidth onClick={toggleDrawer}>

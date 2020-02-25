@@ -1,14 +1,5 @@
 import React from 'react';
-import {
-  Button,
-  Drawer,
-  Divider,
-  Container,
-  TextField,
-  Typography,
-  IconButton,
-  Box
-} from '@material-ui/core';
+import { Button, Drawer, Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 import SignInForm from '../sign-in-form/SignInForm';
@@ -16,8 +7,9 @@ import RegisterForm from '../register-form/RegisterForm';
 
 const useStyles = makeStyles({
   drawer: {
-    flex: 1,
-    width: 350
+    width: 300,
+    marginTop: '8px',
+    marginBottom: '12px'
   },
   authButton: {
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
@@ -36,11 +28,11 @@ export default function AuthModal() {
     return (
       <Box
         display="flex"
+        flex={1}
         flexDirection="column"
         justifyContent="center"
         alignItems="center"
         className={classes.drawer}
-        border={1}
       >
         {showSignInForm ? (
           <SignInForm

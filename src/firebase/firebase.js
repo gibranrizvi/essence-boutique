@@ -36,20 +36,14 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 
   if (!snapshot.exists) {
     // Create new user
-    const { displayName, handle, role, telephone, email, createdBy } = userAuth;
+    const { displayName, telephone, email } = userAuth;
     const createdAt = new Date();
 
     try {
       await userRef.set({
         displayName,
-        handle,
-        role,
         telephone,
         email,
-        tabs: [],
-        hasActiveTab: false,
-        seybrewTab: { count: 0, orders: [] },
-        createdBy,
         createdAt,
         ...additionalData
       });

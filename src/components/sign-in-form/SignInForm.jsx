@@ -3,13 +3,12 @@ import {
   Avatar,
   Button,
   CssBaseline,
-  FormControlLabel,
   TextField,
   Link,
   Grid,
-  Checkbox,
   Typography,
-  Container
+  Container,
+  CircularProgress
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -40,6 +39,10 @@ const useStyles = makeStyles(theme => ({
 export default function SignIn({ toggleDrawer, setShowSignInForm }) {
   const classes = useStyles();
 
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [submitting, setSubmitting] = React.useState(false);
+
   return (
     <Container>
       <CssBaseline />
@@ -53,24 +56,21 @@ export default function SignIn({ toggleDrawer, setShowSignInForm }) {
         <form className={classes.form} noValidate>
           <TextField
             variant="outlined"
-            margin="normal"
+            margin="dense"
             required
             fullWidth
-            id="email"
             label="Email"
-            name="email"
+            type="email"
             autoComplete="email"
             autoFocus
           />
           <TextField
             variant="outlined"
-            margin="normal"
+            margin="dense"
             required
             fullWidth
-            name="password"
             label="Password"
             type="password"
-            id="password"
           />
           <div className={classes.submit}>
             <Button
@@ -80,6 +80,17 @@ export default function SignIn({ toggleDrawer, setShowSignInForm }) {
               color="primary"
               className={classes.submitButton}
             >
+              {submitting && (
+                <CircularProgress
+                  size={20}
+                  style={{
+                    position: 'absolute',
+                    left: 20,
+                    alignSelf: 'center',
+                    color: 'white'
+                  }}
+                />
+              )}
               Sign In
             </Button>
             <Button fullWidth onClick={toggleDrawer}>
@@ -93,7 +104,11 @@ export default function SignIn({ toggleDrawer, setShowSignInForm }) {
               </Link>
             </Grid>
             <Grid item>
-              <Link onClick={() => setShowSignInForm(false)} variant="body2">
+              <Link
+                onClick={() => setShowSignInForm(false)}
+                variant="body2"
+                style={{}}
+              >
                 Don't have an account? Sign up now
               </Link>
             </Grid>
