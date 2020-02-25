@@ -1,26 +1,35 @@
 import React from 'react';
-import logo from './logo.svg';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+
 import './App.css';
 
-function App() {
+import Header from './components/header/Header';
+import Footer from './components/footer/Footer';
+import HomePage from './pages/home/HomePage';
+
+import { auth, firestore, FirebaseContext } from './firebase';
+import useAuth from './hooks/useAuth';
+
+const App = () => {
+  const currentUser = useAuth();
+
+  // console.log(currentUser);
+  // console.log(customers);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <FirebaseContext.Provider value={{ currentUser, auth, firestore }}>
+      <div className="App">
+        <Router>
+          <Header />
+
+          <Switch>
+            <Route exact path="/" component={HomePage} />
+          </Switch>
+          <Footer />
+        </Router>
+      </div>
+    </FirebaseContext.Provider>
   );
-}
+};
 
 export default App;
