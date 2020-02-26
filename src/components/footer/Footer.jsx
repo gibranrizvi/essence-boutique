@@ -2,11 +2,13 @@ import React from 'react';
 import { Typography, Container, Link } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
+import { Link as RouterLink } from 'react-router-dom';
+
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
-    minHeight: '90vh'
+    minHeight: '18vh'
   },
   main: {
     marginTop: theme.spacing(8),
@@ -24,7 +26,7 @@ const Copyright = () => {
   return (
     <Typography variant="body2" color="inherit">
       {'Copyright © '}
-      <Link color="inherit" href="/">
+      <Link component={RouterLink} color="inherit" to="/">
         Essence Boutique
       </Link>{' '}
       {new Date().getFullYear()}

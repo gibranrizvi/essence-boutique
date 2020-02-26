@@ -8,7 +8,8 @@ import {
   Grid,
   Typography,
   Container,
-  CircularProgress
+  CircularProgress,
+  FormHelperText
 } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
@@ -131,11 +132,7 @@ export default function RegisterForm({ toggleDrawer, setShowSignInForm }) {
         email
       };
 
-      await createUserProfileDocument(userData);
-
-      await setSubmitting(false);
-      await setValues(INITIAL_VALUES);
-      return toggleDrawer;
+      return await createUserProfileDocument(userData);
     } catch (error) {
       console.log(error);
       setSubmitting(false);
@@ -189,6 +186,17 @@ export default function RegisterForm({ toggleDrawer, setShowSignInForm }) {
               />
             </Grid>
           </Grid>
+          <FormHelperText
+            style={{
+              marginLeft: '2px',
+              marginTop: '-2px',
+              marginBottom: '4px',
+              color: 'red'
+            }}
+          >
+            {errors.firstName && errors.firstName}
+            {errors.lastName && errors.lastName}
+          </FormHelperText>
           <TextField
             variant="outlined"
             margin="dense"
@@ -201,6 +209,13 @@ export default function RegisterForm({ toggleDrawer, setShowSignInForm }) {
               setValues({ ...values, telephone: target.value })
             }
             error={!!errors.telephone}
+            helperText={
+              errors.telephone ? (
+                <span style={{ color: 'red', marginLeft: '-12px' }}>
+                  {errors.telephone}
+                </span>
+              ) : null
+            }
           />
           <TextField
             variant="outlined"
@@ -214,6 +229,13 @@ export default function RegisterForm({ toggleDrawer, setShowSignInForm }) {
               setValues({ ...values, email: target.value })
             }
             error={!!errors.email}
+            helperText={
+              errors.email ? (
+                <span style={{ color: 'red', marginLeft: '-12px' }}>
+                  {errors.email}
+                </span>
+              ) : null
+            }
           />
           <TextField
             variant="outlined"
@@ -227,6 +249,13 @@ export default function RegisterForm({ toggleDrawer, setShowSignInForm }) {
               setValues({ ...values, password: target.value })
             }
             error={!!errors.password}
+            helperText={
+              errors.password ? (
+                <span style={{ color: 'red', marginLeft: '-12px' }}>
+                  {errors.password}
+                </span>
+              ) : null
+            }
           />
           <TextField
             variant="outlined"
@@ -240,6 +269,13 @@ export default function RegisterForm({ toggleDrawer, setShowSignInForm }) {
               setValues({ ...values, confirmPassword: target.value })
             }
             error={!!errors.confirmPassword}
+            helperText={
+              errors.confirmPassword ? (
+                <span style={{ color: 'red', marginLeft: '-12px' }}>
+                  {errors.confirmPassword}
+                </span>
+              ) : null
+            }
           />
           <div className={classes.submit}>
             <Button

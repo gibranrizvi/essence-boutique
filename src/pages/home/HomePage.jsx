@@ -10,29 +10,34 @@ const HomePage = () => {
   const currentHour = Number(format(new Date(), 'H'));
 
   const renderGreeting = () => {
-    const name = currentUser.displayName.split(' ')[0];
-    if (currentHour >= 2 && currentHour < 12)
-      return (
-        <Typography fontFamily="Raleway" variant="h4" align="left">
-          Good Morning, {name}
-        </Typography>
-      );
+    let greetingMessage = '';
+    if (currentHour >= 2 && currentHour < 12) greetingMessage = 'Good Morning';
     else if (currentHour >= 12 && currentHour < 6)
+      greetingMessage = 'Good Afternoon';
+    greetingMessage = 'Good Evening';
+
+    if (currentUser && !currentUser.displayName.includes('Display')) {
+      const name = currentUser.displayName.split(' ')[0];
       return (
         <Typography variant="h4" align="left">
-          Good Afternoon, {name}
+          {greetingMessage + ', ' + name}
         </Typography>
       );
+    }
+
     return (
       <Typography variant="h4" align="left">
-        Good Evening, {name}
+        {greetingMessage}
       </Typography>
     );
   };
 
   return (
-    <Container style={{ margin: '12px' }}>
-      <Grid container>{currentUser && renderGreeting()}</Grid>
+    <Container style={{ padding: '24px' }}>
+      <Typography variant="h6" align="left">
+        {format(new Date(), 'do MMMM yyyy')}
+      </Typography>
+      <Grid container>{renderGreeting()}</Grid>
     </Container>
   );
 };

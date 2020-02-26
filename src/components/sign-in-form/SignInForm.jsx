@@ -8,10 +8,13 @@ import {
   Grid,
   Typography,
   Container,
-  CircularProgress
+  CircularProgress,
+  FormHelperText
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+
+import { auth, createUserProfileDocument } from '../../firebase';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -43,6 +46,36 @@ export default function SignIn({ toggleDrawer, setShowSignInForm }) {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [submitting, setSubmitting] = React.useState(false);
+  const [errors, setErrors] = React.useState({});
+
+  const handleSubmit = async event => {
+    event.preventDefault();
+
+    // Validation
+    if (!email) {
+      return setErrors({ email: 'Please enter your email' });
+    } else if (!password) {
+      return setErrors({ password: 'Please enter your password' });
+    } else if (
+      email &&
+      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email)
+    ) {
+      return setErrors({ email: 'Email is invalid' });
+    }
+
+    setErrors({});
+    setSubmitting(true);
+
+    try {
+      const { user } = await auth.signInWithEmailAndPassword(email, password);
+
+      return await createUserProfileDocument({ uid: user.uid });
+    } catch (error) {
+      console.log(error.message);
+      setSubmitting(false);
+      return setErrors({ general: error.message });
+    }
+  };
 
   return (
     <Container>
@@ -54,7 +87,7 @@ export default function SignIn({ toggleDrawer, setShowSignInForm }) {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form onSubmit={handleSubmit} className={classes.form} noValidate>
           <TextField
             variant="outlined"
             margin="dense"
@@ -62,8 +95,17 @@ export default function SignIn({ toggleDrawer, setShowSignInForm }) {
             fullWidth
             label="Email"
             type="email"
-            autoComplete="email"
             autoFocus
+            value={email}
+            onChange={({ target }) => setEmail(target.value)}
+            error={!!errors.email || !!errors.general}
+            helperText={
+              errors.email ? (
+                <span style={{ color: 'red', marginLeft: '-12px' }}>
+                  {errors.email}
+                </span>
+              ) : null
+            }
           />
           <TextField
             variant="outlined"
@@ -72,7 +114,22 @@ export default function SignIn({ toggleDrawer, setShowSignInForm }) {
             fullWidth
             label="Password"
             type="password"
+            value={password}
+            onChange={({ target }) => setPassword(target.value)}
+            error={!!errors.password || !!errors.general}
+            helperText={
+              errors.password ? (
+                <span style={{ color: 'red', marginLeft: '-12px' }}>
+                  {errors.password}
+                </span>
+              ) : null
+            }
           />
+          {errors.general && (
+            <FormHelperText style={{ color: 'red' }}>
+              {errors.general}
+            </FormHelperText>
+          )}
           <div className={classes.submit}>
             <Button
               type="submit"
