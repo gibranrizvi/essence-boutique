@@ -1,17 +1,12 @@
 import React from 'react';
-import {
-  Container,
-  Typography,
-  Grid,
-  Box,
-  Button,
-  Divider
-} from '@material-ui/core';
+import { Container, Typography, Grid, Box, Divider } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { format } from 'date-fns';
 
 import { FirebaseContext } from '../../firebase';
 import serviceList from '../../service-list/serviceList';
+
+import CreateTicketModal from '../../components/create-ticket-modal/CreateTicketModal';
 
 const serviceListA = serviceList.filter(({ category }) => category === 'A');
 const serviceListB = serviceList.filter(({ category }) => category === 'B');
@@ -30,24 +25,6 @@ const useStyles = makeStyles(theme => ({
   },
   ticketGrid: {
     padding: 0
-  },
-  ticketButtonA: {
-    display: 'flex',
-    height: theme.spacing(24),
-    background: 'linear-gradient(45deg, #e65c00 30%, #f9d423 90%)',
-    opacity: '75%'
-  },
-  ticketButtonB: {
-    display: 'flex',
-    height: theme.spacing(24),
-    background: 'linear-gradient(45deg, #5433ff 30%, #20bdff 90%)',
-    opacity: '75%'
-  },
-  ticketButtonC: {
-    display: 'flex',
-    height: theme.spacing(24),
-    background: 'linear-gradient(45deg, #cc2b5e 30%, #753a88 90%)',
-    opacity: '75%'
   }
 }));
 
@@ -95,37 +72,30 @@ const HomePage = () => {
       justify="center"
       style={{ paddingBottom: '24px' }}
     >
-      <Grid
-        item
-        xs={12}
-        md={8}
-        style={{
-          border: 'solid 1px black'
-        }}
-      >
+      <Grid item xs={12} md={8}>
         <Typography align="left" component="div">
           {renderDate()}
           {renderGreeting()}
         </Typography>
         <Typography variant="h6" align="left">
           <Box fontWeight="fontWeightRegular" letterSpacing={2} fontSize={14}>
-            Get started by selecting one of the tickets below.
+            {!currentUser &&
+              'Sign in or Register to save your information for your next visit.'}
+            <div style={{ margin: '12px 0' }}>
+              <Divider />
+            </div>
+            Get started by selecting one of the three ticket categories below.
             <br />
-            Sign in or Register to save your information for your next visit.
+            Each ticket category covers a different set of services.
           </Box>
         </Typography>
       </Grid>
-      <Grid
-        item
-        xs={12}
-        md={4}
-        style={{
-          border: 'solid 1px black'
-        }}
-      >
-        <Typography align="right" component="div">
-          Your ticket:
-        </Typography>
+      <Grid item xs={12} md={4}>
+        {currentUser && (
+          <Typography align="right" component="div">
+            Your ticket:
+          </Typography>
+        )}
       </Grid>
     </Grid>
   );
@@ -135,7 +105,7 @@ const HomePage = () => {
       <Grid>
         <Typography variant="h6">
           <Box fontWeight="fontWeightLight" letterSpacing={2} fontSize={32}>
-            - Currently serving -
+            - Currently Serving -
           </Box>
         </Typography>
       </Grid>
@@ -143,17 +113,10 @@ const HomePage = () => {
         {/* Ticket A */}
         <Grid
           display="flex"
-          flexDirection="column"
+          flexdirection="column"
           className={classes.ticketGrid}
         >
-          <Button
-            fullWidth
-            color="primary"
-            variant="contained"
-            className={classes.ticketButtonA}
-          >
-            <Typography variant="h1">A64</Typography>
-          </Button>
+          <CreateTicketModal currentTicket={{ category: 'A', id: 64 }} />
           <Typography
             align="left"
             component="div"
@@ -186,17 +149,10 @@ const HomePage = () => {
         {/* Ticket B */}
         <Grid
           display="flex"
-          flexDirection="column"
+          flexdirection="column"
           className={classes.ticketGrid}
         >
-          <Button
-            fullWidth
-            color="primary"
-            variant="contained"
-            className={classes.ticketButtonB}
-          >
-            <Typography variant="h1">B6</Typography>
-          </Button>
+          <CreateTicketModal currentTicket={{ category: 'B', id: 26 }} />
           <Typography
             align="left"
             component="div"
@@ -227,19 +183,12 @@ const HomePage = () => {
         </Grid>
 
         {/* Ticket C */}
-        <Box
+        <Grid
           display="flex"
-          flexDirection="column"
+          flexdirection="column"
           className={classes.ticketGrid}
         >
-          <Button
-            fullWidth
-            color="primary"
-            variant="contained"
-            className={classes.ticketButtonC}
-          >
-            <Typography variant="h1">C24</Typography>
-          </Button>
+          <CreateTicketModal currentTicket={{ category: 'C', id: 6 }} />
           <Typography
             align="left"
             component="div"
@@ -267,7 +216,7 @@ const HomePage = () => {
               ))}
             </Box>
           </Typography>
-        </Box>
+        </Grid>
       </Grid>
     </>
   );

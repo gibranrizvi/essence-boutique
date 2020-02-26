@@ -4,7 +4,8 @@ import firebase, {
   firestore,
   createNewUser,
   createNewUserAsAdmin,
-  createUserProfileDocument
+  createUserProfileDocument,
+  createTicketDocument
 } from './firebase';
 
 export {
@@ -13,7 +14,8 @@ export {
   firestore,
   createNewUser,
   createNewUserAsAdmin,
-  createUserProfileDocument
+  createUserProfileDocument,
+  createTicketDocument
 };
 
 export default firebase;

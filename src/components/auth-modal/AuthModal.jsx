@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Drawer, Box } from '@material-ui/core';
+import { Button, Drawer, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 import SignInForm from '../sign-in-form/SignInForm';
@@ -7,6 +7,7 @@ import RegisterForm from '../register-form/RegisterForm';
 
 const useStyles = makeStyles({
   drawer: {
+    flex: 1,
     width: 300,
     marginTop: '8px',
     marginBottom: '12px'
@@ -27,11 +28,10 @@ export default function AuthModal() {
 
   const renderContent = () => {
     return (
-      <Box
-        display="flex"
-        flex={1}
-        flexDirection="column"
-        justifyContent="center"
+      <Grid
+        container
+        direction="column"
+        justify="center"
         alignItems="center"
         className={classes.drawer}
       >
@@ -46,7 +46,7 @@ export default function AuthModal() {
             setShowSignInForm={value => setShowSignInForm(value)}
           />
         )}
-      </Box>
+      </Grid>
     );
   };
 

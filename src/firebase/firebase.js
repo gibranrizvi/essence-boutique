@@ -1,10 +1,114 @@
 import firebase from 'firebase/app';
+import { format } from 'date-fns';
 import 'firebase/firestore';
 import 'firebase/auth';
 
 import config from './config';
 
 const secondaryApp = firebase.initializeApp(config, 'Secondary');
+
+// Create or update ticket
+export const createTicketDocument = async ticketData => {
+  if (!ticketData) return;
+
+  const currentDate = format(new Date(), 'dd-MM-yyyy');
+
+  const ticketCollectionsRef = firestore.doc(
+    `ticketCollections/${currentDate}`
+  );
+
+  const snapshot = await ticketCollectionsRef.get();
+
+  const { customerName, category, telephone, email, currentUser } = ticketData;
+  const createdAt = new Date();
+
+  if (!snapshot.exists) {
+    // Use set method - this will only run once a day
+    const id = 1;
+
+    const newTicket = {
+      id: category + id,
+      customerName,
+      category,
+      telephone,
+      email,
+      createdBy: currentUser ? currentUser : null,
+      createdAt,
+      current: false,
+      complete: false
+    };
+
+    try {
+      ticketCollectionsRef.set({
+        categoryA: { count: category === 'A' ? 1 : 0, current: 0 },
+        categoryB: { count: category === 'B' ? 1 : 0, current: 0 },
+        categoryC: {
+          count: category === 'C' ? 1 : 0,
+          current: 0
+        },
+        tickets: [newTicket]
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  } else {
+    // Use update method
+
+    const { categoryA, categoryB, categoryC, tickets } = snapshot.data();
+    // return console.log({ categoryA, categoryB, categoryC, tickets });
+
+    let id;
+
+    // Updating counts
+    if (category === 'A') {
+      id = categoryA.count + 1;
+    } else if (category === 'B') {
+      id = categoryB.count + 1;
+    } else {
+      id = categoryC.count + 1;
+    }
+
+    const newTicket = {
+      id: category + id,
+      customerName,
+      category,
+      telephone,
+      email,
+      createdBy: currentUser ? currentUser : null,
+      createdAt,
+      current: false,
+      complete: false
+    };
+
+    try {
+      ticketCollectionsRef.update({
+        categoryA: {
+          count: category === 'A' ? categoryA.count + 1 : categoryA.count,
+          ...categoryA
+        },
+        categoryB: {
+          count:
+            category === 'B'
+              ? firestore.FieldValue.increment(1)
+              : categoryB.count,
+          ...categoryB
+        },
+        categoryC: {
+          count:
+            category === 'C'
+              ? firestore.FieldValue.increment(1)
+              : categoryC.count,
+          ...categoryC
+        },
+        tickets: [newTicket, ...tickets]
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  return ticketCollectionsRef;
+};
 
 // Create user with firebase auth as admin
 export const createNewUserAsAdmin = (email, password) => {
