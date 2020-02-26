@@ -13,7 +13,7 @@ import useAuth from './hooks/useAuth';
 const App = () => {
   const currentUser = useAuth();
 
-  // console.log(currentUser);
+  console.log(currentUser);
 
   return (
     <FirebaseContext.Provider value={{ currentUser, auth, firestore }}>

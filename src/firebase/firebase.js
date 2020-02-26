@@ -32,14 +32,14 @@ export const createTicketDocument = async ticketData => {
       category,
       telephone,
       email,
-      createdBy: currentUser ? currentUser : null,
+      createdBy: currentUser ? { id: currentUser.id } : null,
       createdAt,
       current: false,
-      complete: false
+      closed: false
     };
 
     try {
-      ticketCollectionsRef.set({
+      await ticketCollectionsRef.set({
         categoryA: { count: category === 'A' ? 1 : 0, current: 0 },
         categoryB: { count: category === 'B' ? 1 : 0, current: 0 },
         categoryC: {
@@ -55,17 +55,20 @@ export const createTicketDocument = async ticketData => {
     // Use update method
 
     const { categoryA, categoryB, categoryC, tickets } = snapshot.data();
-    // return console.log({ categoryA, categoryB, categoryC, tickets });
 
     let id;
+    let newDoc;
 
     // Updating counts
     if (category === 'A') {
       id = categoryA.count + 1;
+      newDoc = { categoryA: { count: id, current: categoryA.current } };
     } else if (category === 'B') {
       id = categoryB.count + 1;
+      newDoc = { categoryB: { count: id, current: categoryB.current } };
     } else {
       id = categoryC.count + 1;
+      newDoc = { categoryC: { count: id, current: categoryC.current } };
     }
 
     const newTicket = {
@@ -74,34 +77,16 @@ export const createTicketDocument = async ticketData => {
       category,
       telephone,
       email,
-      createdBy: currentUser ? currentUser : null,
+      createdBy: currentUser ? { id: currentUser.id } : null,
       createdAt,
       current: false,
-      complete: false
+      closed: false
     };
 
+    newDoc.tickets = [newTicket, ...tickets];
+
     try {
-      ticketCollectionsRef.update({
-        categoryA: {
-          count: category === 'A' ? categoryA.count + 1 : categoryA.count,
-          ...categoryA
-        },
-        categoryB: {
-          count:
-            category === 'B'
-              ? firestore.FieldValue.increment(1)
-              : categoryB.count,
-          ...categoryB
-        },
-        categoryC: {
-          count:
-            category === 'C'
-              ? firestore.FieldValue.increment(1)
-              : categoryC.count,
-          ...categoryC
-        },
-        tickets: [newTicket, ...tickets]
-      });
+      await ticketCollectionsRef.update(newDoc);
     } catch (error) {
       console.log(error.message);
     }
@@ -131,9 +116,7 @@ export const createNewUser = (email, password) => {
 };
 
 // Saving new user or updating existing user in Firestore
-export const createUserProfileDocument = async (userAuth, additionalData) => {
-  if (!userAuth) return;
-
+export const createUserProfileDocument = async userAuth => {
   const userRef = firestore.doc(`users/${userAuth.uid}`);
 
   const snapshot = await userRef.get();
@@ -148,8 +131,7 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
         displayName,
         telephone,
         email,
-        createdAt,
-        ...additionalData
+        createdAt
       });
     } catch (error) {
       console.log(error.message);
