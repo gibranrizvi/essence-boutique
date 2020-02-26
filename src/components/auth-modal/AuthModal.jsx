@@ -23,10 +23,7 @@ export default function AuthModal() {
   const [modalOpen, setModalOpen] = React.useState(false);
   const [showSignInForm, setShowSignInForm] = React.useState(true);
 
-  const toggleDrawer = () => {
-    setModalOpen(prev => !prev);
-    return console.log('toggleDrawer');
-  };
+  const toggleDrawer = () => setModalOpen(prev => !prev);
 
   const renderContent = () => {
     return (
