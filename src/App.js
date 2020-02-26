@@ -9,14 +9,19 @@ import HomePage from './pages/home/HomePage';
 
 import { auth, firestore, FirebaseContext } from './firebase';
 import useAuth from './hooks/useAuth';
+import useTickets from './hooks/useTickets';
 
 const App = () => {
   const currentUser = useAuth();
 
-  console.log(currentUser);
+  const ticketCollection = useTickets();
+
+  console.log(ticketCollection);
 
   return (
-    <FirebaseContext.Provider value={{ currentUser, auth, firestore }}>
+    <FirebaseContext.Provider
+      value={{ currentUser, ticketCollection, auth, firestore }}
+    >
       <div className="App">
         <Router>
           <Header />

@@ -117,7 +117,7 @@ const CreateTicketForm = ({ toggleDrawer, currentUser, category }) => {
 
       return toggleDrawer();
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
       setSubmitting(false);
       return setErrors({
         general: error.message

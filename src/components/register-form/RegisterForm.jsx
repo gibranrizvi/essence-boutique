@@ -134,7 +134,7 @@ export default function RegisterForm({ toggleDrawer, setShowSignInForm }) {
 
       return await createUserProfileDocument(userData);
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
       setSubmitting(false);
       return setErrors({
         email: 'Email is already in use'
