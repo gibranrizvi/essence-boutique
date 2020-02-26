@@ -4,7 +4,6 @@ import {
   Typography,
   Grid,
   Box,
-  Paper,
   Button,
   Divider
 } from '@material-ui/core';
@@ -23,7 +22,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
-    marginTop: '42px',
+    marginTop: '12px',
     '& > *': {
       margin: theme.spacing(1),
       width: theme.spacing(38)
@@ -34,35 +33,38 @@ const useStyles = makeStyles(theme => ({
   },
   ticketButtonA: {
     display: 'flex',
-    flex: 1,
     height: theme.spacing(24),
     background: 'linear-gradient(45deg, #e65c00 30%, #f9d423 90%)',
     opacity: '75%'
   },
   ticketButtonB: {
     display: 'flex',
-    flex: 1,
     height: theme.spacing(24),
     background: 'linear-gradient(45deg, #5433ff 30%, #20bdff 90%)',
     opacity: '75%'
   },
   ticketButtonC: {
     display: 'flex',
-    flex: 1,
     height: theme.spacing(24),
     background: 'linear-gradient(45deg, #cc2b5e 30%, #753a88 90%)',
     opacity: '75%'
   }
 }));
 
+// COMPONENT
 const HomePage = () => {
   const { currentUser } = React.useContext(FirebaseContext);
 
   const classes = useStyles();
 
-  const currentHour = Number(format(new Date(), 'H'));
+  const renderDate = () => (
+    <Box fontWeight="fontWeightRegular" letterSpacing={6} fontSize={24}>
+      {format(new Date(), 'do MMMM yyyy')}
+    </Box>
+  );
 
   const renderGreeting = () => {
+    const currentHour = Number(format(new Date(), 'H'));
     let greetingMessage = '';
 
     if (currentHour >= 2 && currentHour < 12) greetingMessage = 'Good Morning';
@@ -87,20 +89,56 @@ const HomePage = () => {
   };
 
   const renderHeading = () => (
-    <Typography align="left" component="div">
-      <Box fontWeight="fontWeightRegular" letterSpacing={6} fontSize={24}>
-        {format(new Date(), 'do MMMM yyyy')}
-      </Box>
-      {renderGreeting()}
-    </Typography>
+    <Grid
+      container
+      direction="row"
+      justify="center"
+      style={{ paddingBottom: '24px' }}
+    >
+      <Grid
+        item
+        xs={12}
+        md={8}
+        style={{
+          border: 'solid 1px black'
+        }}
+      >
+        <Typography align="left" component="div">
+          {renderDate()}
+          {renderGreeting()}
+        </Typography>
+        <Typography variant="h6" align="left">
+          <Box fontWeight="fontWeightRegular" letterSpacing={2} fontSize={14}>
+            Get started by selecting one of the tickets below.
+            <br />
+            Sign in or Register to save your information for your next visit.
+          </Box>
+        </Typography>
+      </Grid>
+      <Grid
+        item
+        xs={12}
+        md={4}
+        style={{
+          border: 'solid 1px black'
+        }}
+      >
+        <Typography align="right" component="div">
+          Your ticket:
+        </Typography>
+      </Grid>
+    </Grid>
   );
 
-  return (
-    <Container style={{ paddingTop: '24px', paddingBottom: '24px' }}>
-      {/* Heading */}
-      {renderHeading()}
-
-      {/* Tickets */}
+  const renderTickets = () => (
+    <>
+      <Grid>
+        <Typography variant="h6">
+          <Box fontWeight="fontWeightLight" letterSpacing={2} fontSize={32}>
+            - Currently serving -
+          </Box>
+        </Typography>
+      </Grid>
       <Grid container className={classes.tickets}>
         {/* Ticket A */}
         <Grid
@@ -231,6 +269,16 @@ const HomePage = () => {
           </Typography>
         </Box>
       </Grid>
+    </>
+  );
+
+  return (
+    <Container style={{ padding: '24px' }}>
+      {/* Heading */}
+      {renderHeading()}
+
+      {/* Tickets */}
+      {renderTickets()}
     </Container>
   );
 };
