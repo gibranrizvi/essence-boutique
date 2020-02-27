@@ -26,15 +26,7 @@ const TicketControlPanel = ({ setShowTicketControls, category }) => {
     const openTickets = categoryTickets.filter(ticket => !ticket.closed);
 
     content = (
-      <Typography align="center" component="div">
-        <Box
-          fontWeight="fontWeightRegular"
-          fontSize={24}
-          letterSpacing={2}
-          m={2}
-        >
-          Category {category}
-        </Box>
+      <>
         <Box
           fontWeight="fontWeightRegular"
           fontSize={14}
@@ -70,13 +62,26 @@ const TicketControlPanel = ({ setShowTicketControls, category }) => {
             Set current ticket to {category}1
           </Box>
         )}
-      </Typography>
+      </>
     );
   }
 
   return (
     <>
-      {content}
+      <Typography align="center" component="div">
+        <Box
+          fontWeight="fontWeightRegular"
+          fontSize={24}
+          letterSpacing={2}
+          m={2}
+        >
+          Admin Control Panel
+        </Box>
+        <Box fontWeight="fontWeightRegular" fontSize={20} letterSpacing={2}>
+          Category {category}
+        </Box>
+        {content}
+      </Typography>
       <Grid container justify="center">
         <Grid item>
           <Link
