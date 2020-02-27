@@ -16,8 +16,6 @@ const App = () => {
 
   const ticketCollection = useTickets();
 
-  console.log(ticketCollection);
-
   return (
     <FirebaseContext.Provider
       value={{ currentUser, ticketCollection, auth, firestore }}

@@ -14,7 +14,7 @@ import { format } from 'date-fns';
 import { FirebaseContext } from '../../firebase';
 import serviceList from '../../service-list/serviceList';
 
-import CreateTicketModal from '../../components/create-ticket-modal/CreateTicketModal';
+import TicketActionsModal from '../../components/ticket-actions-modal/TicketActionsModal';
 
 const serviceListA = serviceList.filter(({ category }) => category === 'A');
 const serviceListB = serviceList.filter(({ category }) => category === 'B');
@@ -130,44 +130,64 @@ const HomePage = () => {
       ticket => ticket.createdBy.id === currentUser.id && !ticket.closed
     );
 
-    // TODO registered customers are limited to 3 tickets max - DONE
     // NOTE registered customers can create tickets on behalf of others
     // TODO remove anonymous ticket creation - only admin can create tickets for walk-ins - maybe
 
-    // TODO render coloured buttons here
-    const userTicketButtons = openUserTickets.map(ticket => (
-      <Button
-        variant="contained"
-        color="primary"
-        key={ticket.id}
-        style={{
-          padding: '6px 12px',
-          margin: '2px',
-          // TODO set corresponding backgrounds
-          background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
-        }}
-      >
-        {ticket.id}
-      </Button>
-    ));
+    const userTicketButtons = openUserTickets.map(ticket => {
+      let buttonBackground;
+
+      switch (ticket.category) {
+        case 'A':
+          buttonBackground = {
+            background: 'linear-gradient(45deg, #e65c00 30%, #f9d423 90%)'
+          };
+          break;
+        case 'B':
+          buttonBackground = {
+            background: 'linear-gradient(45deg, #5433ff 30%, #20bdff 90%)'
+          };
+          break;
+        case 'C':
+          buttonBackground = {
+            background: 'linear-gradient(45deg, #cc2b5e 30%, #753a88 90%)'
+          };
+          break;
+        default:
+          break;
+      }
+      return (
+        <Button
+          variant="contained"
+          color="primary"
+          key={ticket.id}
+          style={{
+            padding: '6px 12px',
+            margin: '2px',
+            opacity: '85%',
+            ...buttonBackground
+          }}
+        >
+          {ticket.id}
+        </Button>
+      );
+    });
+
     return (
       <Typography align="center" component="div">
         <Box
-          fontWeight="fontWeightLight"
+          fontWeight="fontWeightRegular"
           letterSpacing={2}
           fontSize={24}
           style={{ marginTop: '8px' }}
         >
-          {openUserTickets.length === 0 ? (
-            <p>View your upcoming tickets here</p>
-          ) : (
-            <p>Upcoming ticket(s)</p>
-          )}
+          {openUserTickets.length === 0
+            ? 'View your upcoming tickets here'
+            : 'Upcoming ticket(s)'}
         </Box>
         <Grid
           style={{
             display: 'flex',
-            marginTop: '-16px',
+            marginTop: '16px',
             marginBottom: '18px',
             justifyContent: 'center',
             alignItems: 'center'
@@ -200,7 +220,7 @@ const HomePage = () => {
           flexdirection="column"
           className={classes.ticketGrid}
         >
-          <CreateTicketModal category="A" />
+          <TicketActionsModal category="A" />
           <Typography
             align="left"
             component="div"
@@ -236,7 +256,7 @@ const HomePage = () => {
           flexdirection="column"
           className={classes.ticketGrid}
         >
-          <CreateTicketModal category="B" />
+          <TicketActionsModal category="B" />
           <Typography
             align="left"
             component="div"
@@ -272,7 +292,7 @@ const HomePage = () => {
           flexdirection="column"
           className={classes.ticketGrid}
         >
-          <CreateTicketModal category="C" />
+          <TicketActionsModal category="C" />
           <Typography
             align="left"
             component="div"

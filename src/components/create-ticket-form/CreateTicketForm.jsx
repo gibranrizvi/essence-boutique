@@ -8,7 +8,8 @@ import {
   Typography,
   Container,
   CircularProgress,
-  FormHelperText
+  FormHelperText,
+  Link
 } from '@material-ui/core';
 import ConfirmationNumberIcon from '@material-ui/icons/ConfirmationNumber';
 import { makeStyles } from '@material-ui/core/styles';
@@ -45,7 +46,12 @@ const INITIAL_VALUES = {
   email: ''
 };
 
-const CreateTicketForm = ({ toggleDrawer, currentUser, category }) => {
+const CreateTicketForm = ({
+  toggleDrawer,
+  currentUser,
+  category,
+  setShowTicketControls
+}) => {
   const classes = useStyles();
 
   const [values, setValues] = React.useState(INITIAL_VALUES);
@@ -244,6 +250,19 @@ const CreateTicketForm = ({ toggleDrawer, currentUser, category }) => {
               Cancel
             </Button>
           </div>
+          {setShowTicketControls && (
+            <Grid container justify="center">
+              <Grid item>
+                <Link
+                  onClick={() => setShowTicketControls(true)}
+                  variant="body2"
+                  style={{ cursor: 'pointer' }}
+                >
+                  Go back
+                </Link>
+              </Grid>
+            </Grid>
+          )}
         </form>
       </div>
     </Container>
