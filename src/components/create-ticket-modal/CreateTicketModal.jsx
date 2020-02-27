@@ -1,5 +1,11 @@
 import React from 'react';
-import { Button, Drawer, Typography, Grid } from '@material-ui/core';
+import {
+  Button,
+  Drawer,
+  Typography,
+  Grid,
+  CircularProgress
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { FirebaseContext } from '../../firebase';
@@ -18,14 +24,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const CreateTicketModal = ({ currentTicket }) => {
-  const { currentUser } = React.useContext(FirebaseContext);
+const CreateTicketModal = ({ category }) => {
+  const { currentUser, ticketCollection } = React.useContext(FirebaseContext);
 
   const classes = useStyles();
 
   const [modalOpen, setModalOpen] = React.useState(false);
-
-  const { id, category } = currentTicket;
 
   let buttonBackground;
 
@@ -63,21 +67,85 @@ const CreateTicketModal = ({ currentTicket }) => {
     );
   };
 
-  return (
-    <>
+  const renderButtonLabel = () => {
+    // When tickets are still loading
+    if (!ticketCollection) {
+      return (
+        <CircularProgress
+          size={48}
+          style={{
+            position: 'absolute',
+            alignSelf: 'center',
+            color: 'white'
+          }}
+        />
+      );
+    }
+
+    const { categoryA, categoryB, categoryC } = ticketCollection;
+
+    let buttonLabel;
+
+    if (category === 'A') {
+      if (categoryA.current === 0) buttonLabel = '+';
+      else buttonLabel = `A${categoryA.current}`;
+    } else if (category === 'B') {
+      if (categoryB.current === 0) buttonLabel = '+';
+      else buttonLabel = `B${categoryB.current}`;
+    } else {
+      if (categoryC.current === 0) buttonLabel = '+';
+      else buttonLabel = `C${categoryC.current}`;
+    }
+
+    return <Typography variant="h1">{buttonLabel}</Typography>;
+  };
+
+  const renderOpenModalButton = () => {
+    // When user is not authenticated
+    if (!currentUser) {
+      return (
+        <Button
+          fullWidth
+          color="primary"
+          variant="contained"
+          className={classes.ticketButton}
+          style={buttonBackground}
+          onClick={toggleDrawer}
+        >
+          {renderButtonLabel()}
+        </Button>
+      );
+    }
+
+    const { tickets } = ticketCollection;
+
+    const openUserTickets = tickets.filter(
+      ticket => ticket.createdBy.id === currentUser.id && !ticket.closed
+    );
+
+    const maxTicketsReached = openUserTickets.length >= 3;
+
+    return (
       <Button
         fullWidth
         color="primary"
         variant="contained"
         className={classes.ticketButton}
-        style={buttonBackground}
-        onClick={toggleDrawer}
+        style={
+          maxTicketsReached
+            ? { ...buttonBackground, opacity: '55%' }
+            : buttonBackground
+        }
+        onClick={maxTicketsReached ? () => {} : toggleDrawer}
       >
-        <Typography variant="h1">
-          {category}
-          {id}
-        </Typography>
+        {renderButtonLabel()}
       </Button>
+    );
+  };
+
+  return (
+    <>
+      {renderOpenModalButton()}
       <Drawer anchor="right" open={modalOpen} onClose={toggleDrawer}>
         {renderContent()}
       </Drawer>

@@ -1,5 +1,13 @@
 import React from 'react';
-import { Container, Typography, Grid, Box, Divider } from '@material-ui/core';
+import {
+  Container,
+  Typography,
+  Grid,
+  Box,
+  Divider,
+  CircularProgress,
+  Button
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { format } from 'date-fns';
 
@@ -20,7 +28,7 @@ const useStyles = makeStyles(theme => ({
     marginTop: '12px',
     '& > *': {
       margin: theme.spacing(1),
-      width: theme.spacing(38)
+      width: theme.spacing(36)
     }
   },
   ticketGrid: {
@@ -30,7 +38,7 @@ const useStyles = makeStyles(theme => ({
 
 // COMPONENT
 const HomePage = () => {
-  const { currentUser } = React.useContext(FirebaseContext);
+  const { currentUser, ticketCollection } = React.useContext(FirebaseContext);
 
   const classes = useStyles();
 
@@ -81,7 +89,7 @@ const HomePage = () => {
           <Box fontWeight="fontWeightRegular" letterSpacing={2} fontSize={14}>
             {!currentUser &&
               'Sign in or Register to save your information for your next visit.'}
-            <div style={{ margin: '12px 0' }}>
+            <div style={{ margin: '8px 0', paddingRight: '24px' }}>
               <Divider />
             </div>
             Get started by selecting one of the three ticket categories below.
@@ -90,15 +98,91 @@ const HomePage = () => {
           </Box>
         </Typography>
       </Grid>
-      <Grid item xs={12} md={4}>
-        {currentUser && (
-          <Typography align="right" component="div">
-            Your ticket:
-          </Typography>
-        )}
+      <Grid
+        item
+        xs={12}
+        md={4}
+        style={{
+          display: 'flex',
+          justifyContent: 'center'
+        }}
+      >
+        {!currentUser
+          ? !ticketCollection && (
+              <CircularProgress
+                size={36}
+                style={{
+                  marginTop: '24px',
+                  alignSelf: 'center',
+                  color: '#333'
+                }}
+              />
+            )
+          : renderOpenUserTickets()}
       </Grid>
     </Grid>
   );
+
+  const renderOpenUserTickets = () => {
+    const { tickets } = ticketCollection;
+
+    const openUserTickets = tickets.filter(
+      ticket => ticket.createdBy.id === currentUser.id && !ticket.closed
+    );
+
+    // TODO registered customers are limited to 3 tickets max - DONE
+    // NOTE registered customers can create tickets on behalf of others
+    // TODO remove anonymous ticket creation - only admin can create tickets for walk-ins - maybe
+
+    // TODO render coloured buttons here
+    const userTicketButtons = openUserTickets.map(ticket => (
+      <Button
+        variant="contained"
+        color="primary"
+        key={ticket.id}
+        style={{
+          padding: '6px 12px',
+          margin: '2px',
+          // TODO set corresponding backgrounds
+          background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
+        }}
+      >
+        {ticket.id}
+      </Button>
+    ));
+    return (
+      <Typography align="center" component="div">
+        <Box
+          fontWeight="fontWeightLight"
+          letterSpacing={2}
+          fontSize={24}
+          style={{ marginTop: '8px' }}
+        >
+          {openUserTickets.length === 0 ? (
+            <p>View your upcoming tickets here</p>
+          ) : (
+            <p>Upcoming ticket(s)</p>
+          )}
+        </Box>
+        <Grid
+          style={{
+            display: 'flex',
+            marginTop: '-16px',
+            marginBottom: '18px',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
+          {userTicketButtons}
+        </Grid>
+        {openUserTickets.length >= 3 && (
+          <Box fontWeight="fontWeightRegular" letterSpacing={2} fontSize={14}>
+            You have reached a maximum of 3 tickets
+          </Box>
+        )}
+      </Typography>
+    );
+  };
 
   const renderTickets = () => (
     <>
@@ -116,7 +200,7 @@ const HomePage = () => {
           flexdirection="column"
           className={classes.ticketGrid}
         >
-          <CreateTicketModal currentTicket={{ category: 'A', id: 64 }} />
+          <CreateTicketModal category="A" />
           <Typography
             align="left"
             component="div"
@@ -152,7 +236,7 @@ const HomePage = () => {
           flexdirection="column"
           className={classes.ticketGrid}
         >
-          <CreateTicketModal currentTicket={{ category: 'B', id: 26 }} />
+          <CreateTicketModal category="B" />
           <Typography
             align="left"
             component="div"
@@ -188,7 +272,7 @@ const HomePage = () => {
           flexdirection="column"
           className={classes.ticketGrid}
         >
-          <CreateTicketModal currentTicket={{ category: 'C', id: 6 }} />
+          <CreateTicketModal category="C" />
           <Typography
             align="left"
             component="div"

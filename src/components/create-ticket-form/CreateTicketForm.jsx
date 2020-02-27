@@ -104,7 +104,6 @@ const CreateTicketForm = ({ toggleDrawer, currentUser, category }) => {
       formattedLastName.substring(1);
 
     try {
-      // TODO
       const ticketData = {
         customerName,
         category,
@@ -205,7 +204,6 @@ const CreateTicketForm = ({ toggleDrawer, currentUser, category }) => {
           <TextField
             variant="outlined"
             margin="dense"
-            required
             fullWidth
             type="email"
             label="Email"
