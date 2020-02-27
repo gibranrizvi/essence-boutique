@@ -5,8 +5,7 @@ import {
   Grid,
   Box,
   Divider,
-  CircularProgress,
-  Button
+  Paper
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { format } from 'date-fns';
@@ -104,15 +103,36 @@ const HomePage = () => {
         xs={12}
         md={4}
         style={{
-          display: 'flex',
-          justifyContent: 'center'
+          marginTop: '24px'
         }}
       >
-        {!currentUser
-          ? null
-          : !ticketCollection
-          ? null
-          : renderOpenUserTickets()}
+        <Paper
+          elevation={3}
+          style={{
+            display: 'flex',
+            flex: 1,
+            height: '100%',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
+          {!ticketCollection && (
+            <Typography align="center" component="div">
+              <Box
+                fontWeight="fontWeightRegular"
+                letterSpacing={2}
+                fontSize={20}
+              >
+                View upcoming tickets here
+              </Box>
+            </Typography>
+          )}
+          {!currentUser
+            ? null
+            : !ticketCollection
+            ? null
+            : renderOpenUserTickets()}
+        </Paper>
       </Grid>
     </Grid>
   );
@@ -141,24 +161,27 @@ const HomePage = () => {
           fontWeight="fontWeightRegular"
           letterSpacing={2}
           fontSize={20}
-          style={{ marginTop: '8px' }}
+          mt={2}
         >
           {openUserTickets.length === 0
             ? 'View upcoming tickets here'
             : 'Upcoming tickets'}
         </Box>
         <Grid
+          container
           style={{
             display: 'flex',
-            marginTop: '16px',
-            marginBottom: '18px',
+            marginTop: '12px',
+            marginBottom: '20px',
+            paddingLeft: '8px',
+            paddingRight: '8px',
             justifyContent: 'center',
-            alignItems: 'center'
+            alignContent: 'flex-start'
           }}
         >
           {userTicketButtons}
         </Grid>
-        {openUserTickets.length >= 3 && (
+        {!currentUser.isAdmin && openUserTickets.length >= 3 && (
           <Box fontWeight="fontWeightRegular" letterSpacing={2} fontSize={14}>
             You have reached a maximum of 3 tickets
           </Box>

@@ -59,7 +59,7 @@ const CreateTicketForm = ({
   const [submitting, setSubmitting] = React.useState(false);
 
   React.useEffect(() => {
-    if (currentUser) {
+    if (currentUser && !currentUser.isAdmin) {
       const { displayName, telephone, email } = currentUser;
       const names = displayName.split(' ');
       const firstName = names[0],

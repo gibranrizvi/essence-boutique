@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  Button,
-  Drawer,
-  Typography,
-  Grid,
-  CircularProgress
-} from '@material-ui/core';
+import { Button, Drawer, Typography, Grid, Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { FirebaseContext } from '../../firebase';
@@ -158,7 +152,9 @@ const TicketActionsModal = ({ category }) => {
             ? { ...buttonBackground, opacity: '55%' }
             : buttonBackground
         }
-        onClick={maxTicketsReached ? () => {} : toggleDrawer}
+        onClick={
+          !currentUser.isAdmin && maxTicketsReached ? () => {} : toggleDrawer
+        }
       >
         {renderOpenModalButtonLabel()}
       </Button>
@@ -169,14 +165,11 @@ const TicketActionsModal = ({ category }) => {
     // When tickets are still loading
     if (!ticketCollection) {
       return (
-        <CircularProgress
-          size={48}
-          style={{
-            position: 'absolute',
-            alignSelf: 'center',
-            color: 'white'
-          }}
-        />
+        <Typography component="div">
+          <Box letterSpacing={3} fontWeight="fontWeightRegular" fontSize={56}>
+            +
+          </Box>
+        </Typography>
       );
     }
 
@@ -195,7 +188,13 @@ const TicketActionsModal = ({ category }) => {
       else buttonLabel = `C${categoryC.current}`;
     }
 
-    return <Typography variant="h1">{buttonLabel}</Typography>;
+    return (
+      <Typography component="div">
+        <Box letterSpacing={3} fontWeight="fontWeightRegular" fontSize={56}>
+          {buttonLabel}
+        </Box>
+      </Typography>
+    );
   };
 
   return (
