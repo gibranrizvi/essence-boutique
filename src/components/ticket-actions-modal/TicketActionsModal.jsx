@@ -4,15 +4,13 @@ import {
   Drawer,
   Typography,
   Grid,
-  CircularProgress,
-  Link,
-  Divider,
-  Box
+  CircularProgress
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { FirebaseContext } from '../../firebase';
 import CreateTicketForm from '../create-ticket-form/CreateTicketForm';
+import TicketControlPanel from '../ticket-control-panel/TicketControlPanel';
 
 const useStyles = makeStyles(theme => ({
   drawer: {
@@ -50,39 +48,33 @@ const TicketActionsModal = ({ category }) => {
     };
   }
 
-  const toggleDrawer = () => setModalOpen(prev => !prev);
+  const toggleDrawer = () => {
+    if (currentUser && currentUser.isAdmin) setShowTicketControls(true);
+    return setModalOpen(prev => !prev);
+  };
 
   const renderContent = () => {
     let drawerContent;
     if (!currentUser) {
-      if (!ticketCollection) {
-        drawerContent = (
-          <CircularProgress
-            size={48}
-            style={{
-              position: 'absolute',
-              alignSelf: 'center',
-              color: '#333'
-            }}
-          />
-        );
-      } else {
-        drawerContent = (
-          <CreateTicketForm
-            toggleDrawer={toggleDrawer}
-            currentUser={currentUser}
-            category={category}
-          />
-        );
-      }
+      drawerContent = (
+        <CreateTicketForm
+          toggleDrawer={toggleDrawer}
+          currentUser={currentUser}
+          category={category}
+        />
+      );
     } else {
       if (currentUser.isAdmin) {
         drawerContent = showTicketControls ? (
-          renderTicketControls()
+          <TicketControlPanel
+            category={category}
+            setShowTicketControls={setShowTicketControls}
+          />
         ) : (
           <CreateTicketForm
             toggleDrawer={toggleDrawer}
             category={category}
+            currentUser={currentUser}
             setShowTicketControls={setShowTicketControls}
           />
         );
@@ -110,96 +102,70 @@ const TicketActionsModal = ({ category }) => {
     );
   };
 
-  const renderTicketControls = () => {
-    const { tickets } = ticketCollection;
-
-    const categoryTickets = tickets.filter(
-      ticket => ticket.category === category
-    );
-
-    let content;
-    if (categoryTickets.length === 0)
-      content = (
-        <Box
-          fontWeight="fontWeightRegular"
-          fontSize={14}
-          letterSpacing={2}
-          m={2}
+  const renderOpenModalButton = () => {
+    // When user is not authenticated
+    if (!currentUser) {
+      return (
+        <Button
+          fullWidth
+          color="primary"
+          variant="contained"
+          className={classes.ticketButton}
+          style={buttonBackground}
+          onClick={toggleDrawer}
         >
-          There are 0 tickets under this category
-        </Box>
-      );
-    else {
-      const openTickets = categoryTickets.filter(ticket => !ticket.closed);
-
-      content = (
-        <Typography align="center" component="div">
-          <Box
-            fontWeight="fontWeightRegular"
-            fontSize={24}
-            letterSpacing={2}
-            m={2}
-          >
-            Category {category}
-          </Box>
-          <Box
-            fontWeight="fontWeightRegular"
-            fontSize={14}
-            letterSpacing={2}
-            m={2}
-          >
-            Total tickets: {categoryTickets.length}
-            <br />
-            Open tickets: {openTickets.length}
-            <br />
-            Closed tickets: {categoryTickets.length - openTickets.length}
-            <br />
-          </Box>
-          <Divider />
-          {openTickets.find(ticket => ticket.current) ? (
-            <Box
-              fontWeight="fontWeightRegular"
-              fontSize={14}
-              letterSpacing={2}
-              m={2}
-            >
-              Current ticket: {openTickets.find(ticket => ticket.current).id}
-              <br />
-              Close current ticket and go to next ticket
-            </Box>
-          ) : (
-            <Box
-              fontWeight="fontWeightRegular"
-              fontSize={14}
-              letterSpacing={2}
-              m={2}
-            >
-              Set current ticket to {category}1
-            </Box>
-          )}
-        </Typography>
+          {renderOpenModalButtonLabel()}
+        </Button>
       );
     }
 
+    if (!ticketCollection) {
+      return (
+        <Button
+          fullWidth
+          color="primary"
+          variant="contained"
+          className={classes.ticketButton}
+          style={buttonBackground}
+          onClick={toggleDrawer}
+        >
+          {renderOpenModalButtonLabel()}
+        </Button>
+      );
+    }
+
+    // If user is logged in, check how many tickets are booked
+    // If user has reached max tickets, disable buttons
+    const { tickets } = ticketCollection;
+
+    const openUserTickets = tickets.filter(
+      ticket =>
+        ticket.createdBy.id &&
+        ticket.createdBy.id === currentUser.id &&
+        !ticket.closed
+    );
+
+    const maxTicketsReached = openUserTickets.length >= 3;
+
     return (
-      <>
-        {content}
-        <Grid container justify="center">
-          <Grid item>
-            <Link
-              onClick={() => setShowTicketControls(false)}
-              variant="body2"
-              style={{ cursor: 'pointer' }}
-            >
-              Create a ticket for a customer
-            </Link>
-          </Grid>
-        </Grid>
-      </>
+      <Button
+        fullWidth
+        color="primary"
+        variant="contained"
+        className={classes.ticketButton}
+        style={
+          !currentUser.isAdmin && maxTicketsReached
+            ? { ...buttonBackground, opacity: '55%' }
+            : buttonBackground
+        }
+        onClick={maxTicketsReached ? () => {} : toggleDrawer}
+      >
+        {renderOpenModalButtonLabel()}
+      </Button>
     );
   };
 
-  const renderButtonLabel = () => {
+  const renderOpenModalButtonLabel = () => {
     // When tickets are still loading
     if (!ticketCollection) {
       return (
@@ -230,49 +196,6 @@ const TicketActionsModal = ({ category }) => {
     }
 
     return <Typography variant="h1">{buttonLabel}</Typography>;
-  };
-
-  const renderOpenModalButton = () => {
-    // When user is not authenticated
-    if (!currentUser) {
-      return (
-        <Button
-          fullWidth
-          color="primary"
-          variant="contained"
-          className={classes.ticketButton}
-          style={buttonBackground}
-          onClick={toggleDrawer}
-        >
-          {renderButtonLabel()}
-        </Button>
-      );
-    }
-
-    const { tickets } = ticketCollection;
-
-    const openUserTickets = tickets.filter(
-      ticket => ticket.createdBy.id === currentUser.id && !ticket.closed
-    );
-
-    const maxTicketsReached = openUserTickets.length >= 3;
-
-    return (
-      <Button
-        fullWidth
-        color="primary"
-        variant="contained"
-        className={classes.ticketButton}
-        style={
-          maxTicketsReached
-            ? { ...buttonBackground, opacity: '55%' }
-            : buttonBackground
-        }
-        onClick={maxTicketsReached ? () => {} : toggleDrawer}
-      >
-        {renderButtonLabel()}
-      </Button>
-    );
   };
 
   return (

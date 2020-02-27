@@ -15,6 +15,7 @@ import { FirebaseContext } from '../../firebase';
 import serviceList from '../../service-list/serviceList';
 
 import TicketActionsModal from '../../components/ticket-actions-modal/TicketActionsModal';
+import TicketPopover from '../../components/ticket-popover/TicketPopover';
 
 const serviceListA = serviceList.filter(({ category }) => category === 'A');
 const serviceListB = serviceList.filter(({ category }) => category === 'B');
@@ -108,16 +109,9 @@ const HomePage = () => {
         }}
       >
         {!currentUser
-          ? !ticketCollection && (
-              <CircularProgress
-                size={36}
-                style={{
-                  marginTop: '24px',
-                  alignSelf: 'center',
-                  color: '#333'
-                }}
-              />
-            )
+          ? null
+          : !ticketCollection
+          ? null
           : renderOpenUserTickets()}
       </Grid>
     </Grid>
@@ -127,62 +121,31 @@ const HomePage = () => {
     const { tickets } = ticketCollection;
 
     const openUserTickets = tickets.filter(
-      ticket => ticket.createdBy.id === currentUser.id && !ticket.closed
+      ticket =>
+        ticket.createdBy.id &&
+        ticket.createdBy.id === currentUser.id &&
+        !ticket.current &&
+        !ticket.closed
     );
 
     // NOTE registered customers can create tickets on behalf of others
     // TODO remove anonymous ticket creation - only admin can create tickets for walk-ins - maybe
 
-    const userTicketButtons = openUserTickets.map(ticket => {
-      let buttonBackground;
-
-      switch (ticket.category) {
-        case 'A':
-          buttonBackground = {
-            background: 'linear-gradient(45deg, #e65c00 30%, #f9d423 90%)'
-          };
-          break;
-        case 'B':
-          buttonBackground = {
-            background: 'linear-gradient(45deg, #5433ff 30%, #20bdff 90%)'
-          };
-          break;
-        case 'C':
-          buttonBackground = {
-            background: 'linear-gradient(45deg, #cc2b5e 30%, #753a88 90%)'
-          };
-          break;
-        default:
-          break;
-      }
-      return (
-        <Button
-          variant="contained"
-          color="primary"
-          key={ticket.id}
-          style={{
-            padding: '6px 12px',
-            margin: '2px',
-            opacity: '85%',
-            ...buttonBackground
-          }}
-        >
-          {ticket.id}
-        </Button>
-      );
-    });
+    const userTicketButtons = openUserTickets.map(ticket => (
+      <TicketPopover key={ticket.id} ticket={ticket} />
+    ));
 
     return (
       <Typography align="center" component="div">
         <Box
           fontWeight="fontWeightRegular"
           letterSpacing={2}
-          fontSize={24}
+          fontSize={20}
           style={{ marginTop: '8px' }}
         >
           {openUserTickets.length === 0
-            ? 'View your upcoming tickets here'
-            : 'Upcoming ticket(s)'}
+            ? 'View upcoming tickets here'
+            : 'Upcoming tickets'}
         </Box>
         <Grid
           style={{

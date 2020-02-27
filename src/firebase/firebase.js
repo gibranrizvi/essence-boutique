@@ -32,7 +32,13 @@ export const createTicketDocument = async ticketData => {
       category,
       telephone,
       email,
-      createdBy: currentUser ? { id: currentUser.id } : null,
+      createdBy: currentUser
+        ? {
+            id: currentUser.id,
+            displayName: currentUser.displayName,
+            telephone: currentUser.telephone
+          }
+        : { displayName: customerName, telephone: telephone },
       createdAt,
       current: false,
       closed: false
@@ -77,7 +83,13 @@ export const createTicketDocument = async ticketData => {
       category,
       telephone,
       email,
-      createdBy: currentUser ? { id: currentUser.id } : null,
+      createdBy: currentUser
+        ? {
+            id: currentUser.id,
+            displayName: currentUser.displayName,
+            telephone: currentUser.telephone
+          }
+        : { displayName: customerName, telephone: telephone },
       createdAt,
       current: false,
       closed: false

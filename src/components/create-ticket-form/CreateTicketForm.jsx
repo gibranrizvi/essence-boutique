@@ -258,7 +258,7 @@ const CreateTicketForm = ({
                   variant="body2"
                   style={{ cursor: 'pointer' }}
                 >
-                  Go back
+                  Go to control panel
                 </Link>
               </Grid>
             </Grid>
