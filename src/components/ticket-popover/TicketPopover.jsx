@@ -1,9 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Popover from '@material-ui/core/Popover';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import { Box } from '@material-ui/core';
+import { Box, Popover, Typography, Button, Chip } from '@material-ui/core';
 import { format } from 'date-fns';
 
 const useStyles = makeStyles(theme => ({
@@ -12,7 +9,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function TicketPopover({ ticket }) {
+const TicketPopover = ({ ticket }) => {
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -59,12 +56,37 @@ export default function TicketPopover({ ticket }) {
         style={{
           padding: '6px 12px',
           margin: '2px',
-          opacity: '85%',
+          opacity: ticket.closed ? '55%' : '85%',
           ...buttonBackground
         }}
         onClick={handleClick}
       >
         {ticket.id}
+        {ticket.current && (
+          <Chip
+            style={{
+              background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+              position: 'absolute',
+              alignSelf: 'center',
+              right: 78
+            }}
+            label="Current"
+            color="primary"
+            size="small"
+          />
+        )}
+        {ticket.closed && (
+          <Chip
+            style={{
+              position: 'absolute',
+              alignSelf: 'center',
+              right: 78
+            }}
+            label="Closed"
+            color="primary"
+            size="small"
+          />
+        )}
       </Button>
       <Popover
         id={id}
@@ -97,4 +119,6 @@ export default function TicketPopover({ ticket }) {
       </Popover>
     </div>
   );
-}
+};
+
+export default TicketPopover;

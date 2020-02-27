@@ -9,7 +9,9 @@ import TicketControlPanel from '../ticket-control-panel/TicketControlPanel';
 const useStyles = makeStyles(theme => ({
   drawer: {
     flex: 1,
-    width: 300
+    width: 300,
+    paddingTop: '24px',
+    paddingBottom: '24px'
   },
   ticketButton: {
     display: 'flex',
