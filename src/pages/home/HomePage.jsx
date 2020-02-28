@@ -106,33 +106,31 @@ const HomePage = () => {
           marginTop: '24px'
         }}
       >
-        <Paper
-          elevation={3}
-          style={{
-            display: 'flex',
-            flex: 1,
-            height: '100%',
-            justifyContent: 'center',
-            alignItems: 'center'
-          }}
-        >
-          {!ticketCollection && (
-            <Typography align="center" component="div">
-              <Box
-                fontWeight="fontWeightRegular"
-                letterSpacing={2}
-                fontSize={20}
-              >
-                View upcoming tickets here
-              </Box>
-            </Typography>
-          )}
-          {!currentUser
-            ? null
-            : !ticketCollection
-            ? null
-            : renderOpenUserTickets()}
-        </Paper>
+        {currentUser && (
+          <Paper
+            elevation={3}
+            style={{
+              display: 'flex',
+              flex: 1,
+              height: '100%',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+          >
+            {!ticketCollection && (
+              <Typography align="center" component="div">
+                <Box
+                  fontWeight="fontWeightRegular"
+                  letterSpacing={2}
+                  fontSize={20}
+                >
+                  View upcoming tickets here
+                </Box>
+              </Typography>
+            )}
+            {ticketCollection && renderOpenUserTickets()}
+          </Paper>
+        )}
       </Grid>
     </Grid>
   );

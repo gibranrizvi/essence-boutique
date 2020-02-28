@@ -65,6 +65,7 @@ const TicketActionsModal = ({ category }) => {
           <TicketControlPanel
             category={category}
             setShowTicketControls={setShowTicketControls}
+            toggleDrawer={toggleDrawer}
           />
         ) : (
           <CreateTicketForm
@@ -168,7 +169,7 @@ const TicketActionsModal = ({ category }) => {
     if (!ticketCollection) {
       return (
         <Typography component="div">
-          <Box letterSpacing={3} fontWeight="fontWeightRegular" fontSize={56}>
+          <Box letterSpacing={3} fontWeight="fontWeightRegular" fontSize={96}>
             +
           </Box>
         </Typography>
@@ -192,7 +193,7 @@ const TicketActionsModal = ({ category }) => {
 
     return (
       <Typography component="div">
-        <Box letterSpacing={3} fontWeight="fontWeightRegular" fontSize={56}>
+        <Box letterSpacing={3} fontWeight="fontWeightRegular" fontSize={96}>
           {buttonLabel}
         </Box>
       </Typography>

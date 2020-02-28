@@ -5,19 +5,46 @@ import {
   Box,
   Grid,
   Link,
-  Avatar
+  Avatar,
+  Button,
+  CircularProgress
 } from '@material-ui/core';
 import ConfirmationNumberIcon from '@material-ui/icons/ConfirmationNumber';
+import { makeStyles } from '@material-ui/core/styles';
 
 import TicketPopover from '../ticket-popover/TicketPopover';
 
-import { FirebaseContext } from '../../firebase';
+import {
+  FirebaseContext,
+  closeCurrentTicket,
+  startNextTicket
+} from '../../firebase';
 
-const TicketControlPanel = ({ setShowTicketControls, category }) => {
+const useStyles = makeStyles(theme => ({
+  submit: {
+    margin: theme.spacing(3, 2, 2)
+  },
+  submitButton: {
+    color: 'white',
+    marginBottom: theme.spacing(1),
+    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
+  }
+}));
+
+const TicketControlPanel = ({
+  setShowTicketControls,
+  category,
+  toggleDrawer
+}) => {
   const { ticketCollection } = React.useContext(FirebaseContext);
 
+  const classes = useStyles();
+
+  const [submitting, setSubmitting] = React.useState(false);
+
   if (!ticketCollection) {
-    return setShowTicketControls(false);
+    setShowTicketControls(false);
+    return null;
   }
 
   const { tickets } = ticketCollection;
@@ -102,16 +129,79 @@ const TicketControlPanel = ({ setShowTicketControls, category }) => {
   };
 
   const renderActions = () => {
-    return openTickets.find(ticket => ticket.current) ? (
-      <Box fontWeight="fontWeightRegular" fontSize={14} letterSpacing={1} m={2}>
-        Current ticket: {openTickets.find(ticket => ticket.current).id}
-        <br />
-        Close current ticket and go to next ticket
-      </Box>
-    ) : (
-      <Box fontWeight="fontWeightRegular" fontSize={14} letterSpacing={1} m={2}>
-        Get started by setting current ticket to {category}1
-      </Box>
+    const currentTicket = openTickets.find(ticket => ticket.current);
+
+    const noMoreTickets = openTickets.length === 0;
+
+    const nextTicket = !noMoreTickets
+      ? openTickets[openTickets.length - 1]
+      : null;
+
+    let categoryObject =
+      category === 'A'
+        ? ticketCollection.categoryA
+        : category === 'B'
+        ? ticketCollection.categoryB
+        : ticketCollection.categoryC;
+
+    return (
+      <div className={classes.submit}>
+        {currentTicket && (
+          <Box
+            fontWeight="fontWeightRegular"
+            fontSize={14}
+            letterSpacing={1}
+            m={2}
+          >
+            Current ticket: {currentTicket.id}
+          </Box>
+        )}
+        {currentTicket ? (
+          <Button
+            fullWidth
+            variant="contained"
+            className={classes.submitButton}
+            onClick={() => closeCurrentTicket(currentTicket, tickets)}
+          >
+            {submitting && (
+              <CircularProgress
+                size={20}
+                style={{
+                  position: 'absolute',
+                  left: 20,
+                  alignSelf: 'center',
+                  color: 'white'
+                }}
+              />
+            )}
+            Complete Ticket
+          </Button>
+        ) : (
+          <Button
+            fullWidth
+            variant="contained"
+            className={classes.submitButton}
+            onClick={() => startNextTicket(nextTicket, tickets, categoryObject)}
+            disabled={noMoreTickets}
+          >
+            {submitting && (
+              <CircularProgress
+                size={20}
+                style={{
+                  position: 'absolute',
+                  left: 20,
+                  alignSelf: 'center',
+                  color: 'white'
+                }}
+              />
+            )}
+            Start Next Ticket
+          </Button>
+        )}
+        <Button fullWidth onClick={toggleDrawer}>
+          Cancel
+        </Button>
+      </div>
     );
   };
 

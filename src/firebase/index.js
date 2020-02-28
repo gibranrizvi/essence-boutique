@@ -5,7 +5,9 @@ import firebase, {
   createNewUser,
   createNewUserAsAdmin,
   createUserProfileDocument,
-  createTicketDocument
+  createTicketDocument,
+  closeCurrentTicket,
+  startNextTicket
 } from './firebase';
 
 export {
@@ -15,7 +17,9 @@ export {
   createNewUser,
   createNewUserAsAdmin,
   createUserProfileDocument,
-  createTicketDocument
+  createTicketDocument,
+  closeCurrentTicket,
+  startNextTicket
 };
 
 export default firebase;

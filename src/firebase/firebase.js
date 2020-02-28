@@ -7,6 +7,97 @@ import config from './config';
 
 const secondaryApp = firebase.initializeApp(config, 'Secondary');
 
+// Start next ticket
+export const startNextTicket = async (nextTicket, tickets, categoryObject) => {
+  if (!nextTicket) return;
+
+  const { category } = nextTicket;
+
+  const currentDate = format(new Date(), 'dd-MM-yyyy');
+
+  const ticketCollectionsRef = firestore.doc(
+    `ticketCollections/${currentDate}`
+  );
+
+  const updatedCategoryObject = {
+    ...categoryObject,
+    current: categoryObject.current + 1
+  };
+
+  let newDoc;
+
+  // Updating current fields
+  if (category === 'A') {
+    newDoc = { categoryA: updatedCategoryObject };
+  } else if (category === 'B') {
+    newDoc = { categoryB: updatedCategoryObject };
+  } else {
+    newDoc = { categoryC: updatedCategoryObject };
+  }
+
+  const updatedTicket = { ...nextTicket, current: true };
+  let updatedTickets = [];
+
+  for (let i = 0; i < tickets.length; i++) {
+    if (tickets[i].id === nextTicket.id) {
+      updatedTickets.push(updatedTicket);
+    } else {
+      updatedTickets.push(tickets[i]);
+    }
+  }
+
+  newDoc.tickets = updatedTickets;
+
+  try {
+    ticketCollectionsRef.update(newDoc);
+  } catch (error) {
+    console.log(error.message);
+  }
+
+  return ticketCollectionsRef;
+};
+
+// Close current ticket
+export const closeCurrentTicket = async (currentTicket, tickets) => {
+  if (!currentTicket) return;
+
+  const currentDate = new Date();
+
+  const formattedCurrentDate = format(currentDate, 'dd-MM-yyyy');
+
+  const ticketCollectionsRef = firestore.doc(
+    `ticketCollections/${formattedCurrentDate}`
+  );
+
+  // return console.log(currentTicket);
+  const updatedTicket = {
+    ...currentTicket,
+    closed: true,
+    current: false,
+    closedAt: currentDate
+  };
+
+  let updatedTickets = [];
+
+  for (let i = 0; i < tickets.length; i++) {
+    if (tickets[i].id === currentTicket.id) {
+      updatedTickets.push(updatedTicket);
+    } else {
+      updatedTickets.push(tickets[i]);
+    }
+  }
+
+  try {
+    await ticketCollectionsRef.update({
+      tickets: updatedTickets
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+
+  return ticketCollectionsRef;
+};
+
 // Create or update ticket
 export const createTicketDocument = async ticketData => {
   if (!ticketData) return;
