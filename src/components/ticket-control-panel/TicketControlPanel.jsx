@@ -146,16 +146,14 @@ const TicketControlPanel = ({
 
     return (
       <div className={classes.submit}>
-        {currentTicket && (
-          <Box
-            fontWeight="fontWeightRegular"
-            fontSize={14}
-            letterSpacing={1}
-            m={2}
-          >
-            Current ticket: {currentTicket.id}
-          </Box>
-        )}
+        <Box
+          fontWeight="fontWeightRegular"
+          fontSize={14}
+          letterSpacing={1}
+          m={2}
+        >
+          {currentTicket && `Current ticket: ${currentTicket.id}`}
+        </Box>
         {currentTicket ? (
           <Button
             fullWidth

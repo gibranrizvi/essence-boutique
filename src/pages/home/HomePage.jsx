@@ -180,7 +180,13 @@ const HomePage = () => {
           {userTicketButtons}
         </Grid>
         {!currentUser.isAdmin && openUserTickets.length >= 3 && (
-          <Box fontWeight="fontWeightRegular" letterSpacing={2} fontSize={14}>
+          <Box
+            fontWeight="fontWeightRegular"
+            letterSpacing={2}
+            fontSize={14}
+            pb={1}
+            px={4}
+          >
             You have reached a maximum of 3 tickets
           </Box>
         )}

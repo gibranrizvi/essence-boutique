@@ -114,6 +114,11 @@ const TicketPopover = ({ ticket }) => {
             <br />
             Created at{' '}
             <strong>{format(ticket.createdAt.toDate(), 'HH:mm')} today</strong>
+            <br />
+            {ticket.closed && 'Closed at '}
+            {ticket.closed && (
+              <strong>{format(ticket.closedAt.toDate(), 'HH:mm')} today</strong>
+            )}
           </Box>
         </Typography>
       </Popover>
