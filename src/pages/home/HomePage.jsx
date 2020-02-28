@@ -86,12 +86,20 @@ const HomePage = () => {
           {renderGreeting()}
         </Typography>
         <Typography variant="h6" align="left">
+          {!currentUser && (
+            <Box fontWeight="fontWeightRegular" letterSpacing={2} fontSize={14}>
+              Sign in or create an account to create ticket.
+              <br />
+              Alternatively, give us a call and our team will create a ticket
+              for you on your behalf.
+              <br />
+              We also accept walk-ins.
+            </Box>
+          )}
+          <div style={{ margin: '8px 0', paddingRight: '24px' }}>
+            <Divider />
+          </div>
           <Box fontWeight="fontWeightRegular" letterSpacing={2} fontSize={14}>
-            {!currentUser &&
-              'Sign in or Register to save your information for your next visit.'}
-            <div style={{ margin: '8px 0', paddingRight: '24px' }}>
-              <Divider />
-            </div>
             Get started by selecting one of the three ticket categories below.
             <br />
             Each ticket category covers a different set of services.
@@ -142,12 +150,8 @@ const HomePage = () => {
       ticket =>
         ticket.createdBy.id &&
         ticket.createdBy.id === currentUser.id &&
-        !ticket.current &&
         !ticket.closed
     );
-
-    // NOTE registered customers can create tickets on behalf of others
-    // TODO remove anonymous ticket creation - only admin can create tickets for walk-ins - maybe
 
     const userTicketButtons = openUserTickets.map(ticket => (
       <TicketPopover key={ticket.id} ticket={ticket} />

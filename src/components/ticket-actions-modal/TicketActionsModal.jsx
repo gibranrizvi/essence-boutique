@@ -109,7 +109,7 @@ const TicketActionsModal = ({ category }) => {
           variant="contained"
           className={classes.ticketButton}
           style={buttonBackground}
-          onClick={toggleDrawer}
+          onClick={() => {}}
         >
           {renderOpenModalButtonLabel()}
         </Button>
