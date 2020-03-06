@@ -27,7 +27,7 @@ const Copyright = () => {
     <Typography variant="body2" color="inherit">
       {'Copyright © '}
       <Link component={RouterLink} color="inherit" to="/">
-        Essence Boutique
+        Essence Hair Salon
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
