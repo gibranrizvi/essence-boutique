@@ -154,7 +154,11 @@ const TicketControlPanel = ({
             fullWidth
             variant="contained"
             className={classes.submitButton}
-            onClick={() => closeCurrentTicket(currentTicket, tickets)}
+            onClick={async () => {
+              setSubmitting(true);
+              await closeCurrentTicket(currentTicket, tickets);
+              return setSubmitting(false);
+            }}
           >
             {submitting && (
               <CircularProgress
@@ -174,7 +178,11 @@ const TicketControlPanel = ({
             fullWidth
             variant="contained"
             className={classes.submitButton}
-            onClick={() => startNextTicket(nextTicket, tickets, categoryObject)}
+            onClick={async () => {
+              setSubmitting(true);
+              await startNextTicket(nextTicket, tickets, categoryObject);
+              return setSubmitting(false);
+            }}
             disabled={noMoreTickets}
           >
             {submitting && (
