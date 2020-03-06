@@ -128,7 +128,9 @@ const HomePage = () => {
     else greetingMessage = 'Good Evening';
 
     if (currentUser) {
-      const name = currentUser.displayName.split(' ')[0];
+      const name = currentUser.displayName
+        ? currentUser.displayName.split(' ')[0]
+        : null;
       return (
         <Box fontWeight="fontWeightLight" letterSpacing={3} fontSize={48}>
           {greetingMessage + ', ' + name}
