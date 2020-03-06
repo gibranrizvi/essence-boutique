@@ -119,12 +119,7 @@ const TicketControlPanel = ({
     return categoryTickets
       .reverse()
       .map(ticket => (
-        <TicketPopover
-          key={ticket.id}
-          ticket={ticket}
-          current={ticket.current}
-          closed={ticket.closed}
-        />
+        <TicketPopover key={ticket.id} ticket={ticket} showStatusChip />
       ));
   };
 

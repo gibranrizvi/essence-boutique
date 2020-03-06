@@ -9,7 +9,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const TicketPopover = ({ ticket }) => {
+const TicketPopover = ({ ticket, showStatusChip }) => {
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -62,25 +62,25 @@ const TicketPopover = ({ ticket }) => {
         onClick={handleClick}
       >
         {ticket.id}
-        {ticket.current && (
+        {ticket.current && showStatusChip && (
           <Chip
             style={{
               background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
               position: 'absolute',
               alignSelf: 'center',
-              right: 78
+              right: 72
             }}
-            label="Current"
+            label="In Progress"
             color="primary"
             size="small"
           />
         )}
-        {ticket.closed && (
+        {ticket.closed && showStatusChip && (
           <Chip
             style={{
               position: 'absolute',
               alignSelf: 'center',
-              right: 78
+              right: 72
             }}
             label="Closed"
             color="primary"
@@ -104,6 +104,13 @@ const TicketPopover = ({ ticket }) => {
       >
         <Typography className={classes.typography} component="div">
           <Box fontWeight="fontWeightRegular" letterSpacing={2} fontSize={14}>
+            Status:{' '}
+            <strong>
+              {ticket.closed && 'Closed'}
+              {ticket.current && 'In Progress'}
+              {!ticket.closed && !ticket.current && 'Upcoming'}
+            </strong>
+            <br />
             Ticket no. <strong>{ticket.id}</strong>
             <br />
             Customer: <strong>{ticket.customerName}</strong>

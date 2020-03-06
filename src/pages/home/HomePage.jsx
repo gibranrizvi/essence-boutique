@@ -105,7 +105,7 @@ const HomePage = () => {
                 </Box>
               </Typography>
             )}
-            {ticketCollection && renderOpenUserTickets()}
+            {ticketCollection && renderUpcomingTickets()}
           </Paper>
         )}
       </Grid>
@@ -127,7 +127,7 @@ const HomePage = () => {
       greetingMessage = 'Good Afternoon';
     else greetingMessage = 'Good Evening';
 
-    if (currentUser && !currentUser.displayName.includes('Display')) {
+    if (currentUser) {
       const name = currentUser.displayName.split(' ')[0];
       return (
         <Box fontWeight="fontWeightLight" letterSpacing={3} fontSize={48}>
@@ -143,7 +143,7 @@ const HomePage = () => {
     );
   };
 
-  const renderOpenUserTickets = () => {
+  const renderUpcomingTickets = () => {
     const { tickets } = ticketCollection;
 
     const openUserTickets = tickets.filter(
