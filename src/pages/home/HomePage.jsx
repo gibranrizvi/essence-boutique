@@ -42,37 +42,6 @@ const HomePage = () => {
 
   const classes = useStyles();
 
-  const renderDate = () => (
-    <Box fontWeight="fontWeightRegular" letterSpacing={6} fontSize={24}>
-      {format(new Date(), 'do MMMM yyyy')}
-    </Box>
-  );
-
-  const renderGreeting = () => {
-    const currentHour = Number(format(new Date(), 'H'));
-    let greetingMessage = '';
-
-    if (currentHour >= 2 && currentHour < 12) greetingMessage = 'Good Morning';
-    else if (currentHour >= 12 && currentHour < 6)
-      greetingMessage = 'Good Afternoon';
-    else greetingMessage = 'Good Evening';
-
-    if (currentUser && !currentUser.displayName.includes('Display')) {
-      const name = currentUser.displayName.split(' ')[0];
-      return (
-        <Box fontWeight="fontWeightLight" letterSpacing={3} fontSize={48}>
-          {greetingMessage + ', ' + name}
-        </Box>
-      );
-    }
-
-    return (
-      <Box fontWeight="fontWeightLight" letterSpacing={3} fontSize={48}>
-        {greetingMessage}
-      </Box>
-    );
-  };
-
   const renderHeading = () => (
     <Grid
       container
@@ -142,6 +111,37 @@ const HomePage = () => {
       </Grid>
     </Grid>
   );
+
+  const renderDate = () => (
+    <Box fontWeight="fontWeightRegular" letterSpacing={6} fontSize={24}>
+      {format(new Date(), 'do MMMM yyyy')}
+    </Box>
+  );
+
+  const renderGreeting = () => {
+    const currentHour = Number(format(new Date(), 'H'));
+    let greetingMessage = '';
+
+    if (currentHour >= 2 && currentHour < 12) greetingMessage = 'Good Morning';
+    else if (currentHour >= 12 && currentHour < 6)
+      greetingMessage = 'Good Afternoon';
+    else greetingMessage = 'Good Evening';
+
+    if (currentUser && !currentUser.displayName.includes('Display')) {
+      const name = currentUser.displayName.split(' ')[0];
+      return (
+        <Box fontWeight="fontWeightLight" letterSpacing={3} fontSize={48}>
+          {greetingMessage + ', ' + name}
+        </Box>
+      );
+    }
+
+    return (
+      <Box fontWeight="fontWeightLight" letterSpacing={3} fontSize={48}>
+        {greetingMessage}
+      </Box>
+    );
+  };
 
   const renderOpenUserTickets = () => {
     const { tickets } = ticketCollection;
