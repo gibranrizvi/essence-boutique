@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/essense-boutique/static/css/main.523f09c5.chunk.css",
+    "main.js": "/essense-boutique/static/js/main.ec49a0e7.chunk.js",
+    "main.js.map": "/essense-boutique/static/js/main.ec49a0e7.chunk.js.map",
+    "runtime-main.js": "/essense-boutique/static/js/runtime-main.53922999.js",
+    "runtime-main.js.map": "/essense-boutique/static/js/runtime-main.53922999.js.map",
+    "static/js/2.974269e2.chunk.js": "/essense-boutique/static/js/2.974269e2.chunk.js",
+    "static/js/2.974269e2.chunk.js.map": "/essense-boutique/static/js/2.974269e2.chunk.js.map",
+    "index.html": "/essense-boutique/index.html",
+    "precache-manifest.07db35c40e81b67f391b314ba98aea59.js": "/essense-boutique/precache-manifest.07db35c40e81b67f391b314ba98aea59.js",
+    "service-worker.js": "/essense-boutique/service-worker.js",
+    "static/css/main.523f09c5.chunk.css.map": "/essense-boutique/static/css/main.523f09c5.chunk.css.map",
+    "static/js/2.974269e2.chunk.js.LICENSE.txt": "/essense-boutique/static/js/2.974269e2.chunk.js.LICENSE.txt",
+    "static/media/logo.png": "/essense-boutique/static/media/logo.9895ae1d.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.53922999.js",
+    "static/js/2.974269e2.chunk.js",
+    "static/css/main.523f09c5.chunk.css",
+    "static/js/main.ec49a0e7.chunk.js"
+  ]
+}
