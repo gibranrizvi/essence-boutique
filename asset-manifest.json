@@ -1,23 +1,23 @@
 {
   "files": {
-    "main.css": "/essense-boutique/static/css/main.523f09c5.chunk.css",
-    "main.js": "/essense-boutique/static/js/main.ec49a0e7.chunk.js",
-    "main.js.map": "/essense-boutique/static/js/main.ec49a0e7.chunk.js.map",
-    "runtime-main.js": "/essense-boutique/static/js/runtime-main.53922999.js",
-    "runtime-main.js.map": "/essense-boutique/static/js/runtime-main.53922999.js.map",
-    "static/js/2.974269e2.chunk.js": "/essense-boutique/static/js/2.974269e2.chunk.js",
-    "static/js/2.974269e2.chunk.js.map": "/essense-boutique/static/js/2.974269e2.chunk.js.map",
-    "index.html": "/essense-boutique/index.html",
-    "precache-manifest.07db35c40e81b67f391b314ba98aea59.js": "/essense-boutique/precache-manifest.07db35c40e81b67f391b314ba98aea59.js",
-    "service-worker.js": "/essense-boutique/service-worker.js",
-    "static/css/main.523f09c5.chunk.css.map": "/essense-boutique/static/css/main.523f09c5.chunk.css.map",
-    "static/js/2.974269e2.chunk.js.LICENSE.txt": "/essense-boutique/static/js/2.974269e2.chunk.js.LICENSE.txt",
-    "static/media/logo.png": "/essense-boutique/static/media/logo.9895ae1d.png"
+    "main.css": "/essence-boutique/static/css/main.523f09c5.chunk.css",
+    "main.js": "/essence-boutique/static/js/main.d81f99cd.chunk.js",
+    "main.js.map": "/essence-boutique/static/js/main.d81f99cd.chunk.js.map",
+    "runtime-main.js": "/essence-boutique/static/js/runtime-main.8fc25bcd.js",
+    "runtime-main.js.map": "/essence-boutique/static/js/runtime-main.8fc25bcd.js.map",
+    "static/js/2.65fc2eb1.chunk.js": "/essence-boutique/static/js/2.65fc2eb1.chunk.js",
+    "static/js/2.65fc2eb1.chunk.js.map": "/essence-boutique/static/js/2.65fc2eb1.chunk.js.map",
+    "index.html": "/essence-boutique/index.html",
+    "precache-manifest.45b8c4178f42cf52b80856027671a349.js": "/essence-boutique/precache-manifest.45b8c4178f42cf52b80856027671a349.js",
+    "service-worker.js": "/essence-boutique/service-worker.js",
+    "static/css/main.523f09c5.chunk.css.map": "/essence-boutique/static/css/main.523f09c5.chunk.css.map",
+    "static/js/2.65fc2eb1.chunk.js.LICENSE.txt": "/essence-boutique/static/js/2.65fc2eb1.chunk.js.LICENSE.txt",
+    "static/media/logo.png": "/essence-boutique/static/media/logo.9895ae1d.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.53922999.js",
-    "static/js/2.974269e2.chunk.js",
+    "static/js/runtime-main.8fc25bcd.js",
+    "static/js/2.65fc2eb1.chunk.js",
     "static/css/main.523f09c5.chunk.css",
-    "static/js/main.ec49a0e7.chunk.js"
+    "static/js/main.d81f99cd.chunk.js"
   ]
 }
